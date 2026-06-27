@@ -168,10 +168,10 @@
   .slotstage{position:relative;z-index:2;display:flex;align-items:stretch;gap:8px;padding:0 12px}
   .reelframe{flex:1;background:linear-gradient(180deg,#1a0f38,#0e0826);border:3px solid #e0b43a;border-radius:14px;
     padding:10px;box-shadow:inset 0 0 40px rgba(0,0,0,.6),0 0 0 2px rgba(255,210,90,.15)}
-  .zeus{width:150px;flex-shrink:0;overflow:hidden;display:flex;align-items:flex-end;justify-content:center}
+  .zeus{width:240px;flex-shrink:0;overflow:hidden;display:flex;align-items:flex-end;justify-content:center}
   .zeus svg{width:100%;filter:drop-shadow(0 6px 12px rgba(0,0,0,.5))}
-  /* image rendered oversized so the figure reads big; the column crops the transparent square padding */
-  .zeus .zeusimg{width:300px;max-width:none;height:auto;object-fit:contain;display:block;
+  /* size by HEIGHT so Zeus matches the reel height; column crops the transparent square padding on the sides */
+  .zeus .zeusimg{height:100%;width:auto;max-width:none;object-fit:contain;display:block;
     filter:drop-shadow(0 8px 16px rgba(0,0,0,.55))}
   .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
   .cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;position:relative;
