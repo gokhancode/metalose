@@ -1,0 +1,5 @@
+# local dev / preview config (not needed on the live site)
+.claude/
+
+# copyrighted asset kept local only — deployed site falls back to the original SVG Zeus
+zeus.png

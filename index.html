@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MetaLose — The World's Most Honest Crypto Casino*</title>
+<style>
+  :root{
+    --dp-font-family: -apple-system, blinkmacsystemfont, "Segoe UI", roboto, oxygen, ubuntu, cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    --bg:#0a0c12;
+    --bg2:#0e1118;
+    --panel:#12151f;
+    --panel2:#171b27;
+    --line:#222838;
+    --gold:#ffce4f;
+    --blue:#2f7bff;
+    --green:#1fd87b;
+    --red:#ff4d5e;
+    --purple:#7b5cff;
+    --text:#eef1f7;
+    --muted:#8a93a8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--dp-font-family);color:var(--text);line-height:1.5;
+    background:
+      radial-gradient(1000px 560px at 100% -8%,rgba(95,70,200,.16),transparent 58%),
+      radial-gradient(800px 460px at -12% 6%,rgba(40,100,210,.12),transparent 58%),
+      var(--bg);
+    background-attachment:fixed}
+  a{color:inherit;text-decoration:none}
+  ::-webkit-scrollbar{height:8px;width:8px}
+  ::-webkit-scrollbar-thumb{background:#2a3142;border-radius:8px}
+
+  /* ---------- top bar ---------- */
+  .topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:16px;
+    padding:12px 18px;background:#0a0c12;border-bottom:1px solid var(--line)}
+  .brand{font-weight:900;font-size:22px;letter-spacing:3px;white-space:nowrap}
+  .brandimg{height:52px;width:auto;display:block}
+  .brand b{color:var(--gold)}
+  .search{flex:1;max-width:560px;margin:0 auto;display:flex;align-items:center;gap:8px;
+    background:var(--panel2);border:1px solid var(--line);border-radius:99px;padding:9px 16px;color:var(--muted);font-size:14px}
+  .search input{flex:1;background:none;border:none;color:var(--text);font-size:14px;outline:none}
+  .search input::placeholder{color:var(--muted)}
+  .balchip{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-weight:800;font-size:13px;white-space:nowrap}
+  .balchip span{color:var(--muted);font-weight:700;font-size:11px}
+  .balchip b{color:var(--green)} .balchip b.low{color:var(--red)}
+  .signin{background:var(--blue);color:#fff;border:none;font-weight:800;padding:9px 22px;border-radius:8px;cursor:pointer;font-size:14px}
+  .signin:hover{filter:brightness(1.08)}
+  .iconbtn{width:38px;height:38px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);color:var(--muted);cursor:pointer;font-size:16px}
+
+  /* ---------- layout ---------- */
+  .app{display:flex;align-items:flex-start}
+  .sidebar{width:236px;flex-shrink:0;padding:14px 10px;border-right:1px solid var(--line);position:sticky;top:77px;height:calc(100vh - 77px);overflow-y:auto}
+  .tabs{display:flex;gap:6px;margin-bottom:14px}
+  .tabs a{flex:1;text-align:center;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 0;font-size:13px;font-weight:700;color:var(--muted)}
+  .tabs a.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .navsec{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#5a melt;color:#5c6478;font-weight:800;padding:14px 12px 6px}
+  .navitem{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:9px;font-size:14px;font-weight:600;color:#c4cad8;cursor:pointer}
+  .navitem:hover{background:var(--panel2);color:#fff}
+  .navitem .ic{width:18px;text-align:center;font-size:15px}
+  .navitem .new{margin-left:auto;font-size:9px;background:var(--red);color:#fff;font-weight:800;padding:2px 6px;border-radius:6px}
+
+  .content{flex:1;min-width:0;padding:20px;max-width:1280px}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;border-radius:16px;overflow:hidden;min-height:240px;display:flex;align-items:center;
+    background:linear-gradient(110deg,#0c1424 0%,#10204a 45%,#3a1c5e 75%,#5a1d4e 100%)}
+  .hero::after{content:"";position:absolute;inset:0;background:
+    radial-gradient(600px 300px at 88% 30%,rgba(120,90,255,.35),transparent 60%),
+    radial-gradient(400px 240px at 100% 100%,rgba(47,123,255,.35),transparent 60%)}
+  .hero .inner{position:relative;z-index:2;padding:36px 40px;max-width:60%}
+  .hero h1{font-size:38px;line-height:1.08;font-weight:900;letter-spacing:-1px;margin-bottom:8px}
+  .hero h1 .g{color:var(--gold)}
+  .hero p{color:#c9d2e6;font-size:15px;margin-bottom:20px;max-width:440px}
+  .hero .signin{font-size:16px;padding:13px 38px}
+  .hero .casino-art{position:absolute;right:0;top:0;bottom:0;width:48%;z-index:1;opacity:.9;
+    background:radial-gradient(circle at 70% 50%,rgba(47,123,255,.25),transparent 60%)}
+  .hero .roulette{position:absolute;right:6%;top:50%;transform:translateY(-50%);z-index:1;opacity:.85}
+
+  /* ---------- section heads ---------- */
+  .rowhead{display:flex;align-items:center;justify-content:space-between;margin:30px 0 14px}
+  .rowhead h2{font-size:20px;font-weight:900}
+  .rowhead .toggle{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
+  .rowhead .toggle .live{display:flex;align-items:center;gap:5px;color:var(--green);font-weight:700}
+  .rowhead .toggle .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+  .rowhead .toggle .pill{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:4px 10px;font-weight:700;color:var(--text)}
+
+  /* ---------- big wins carousel ---------- */
+  .carousel{display:flex;gap:14px;overflow-x:auto;padding:4px 2px 14px;scroll-snap-type:x proximity}
+  .gcard{flex:0 0 160px;cursor:pointer;scroll-snap-align:start;transition:transform .18s}
+  .gcard:hover{transform:translateY(-5px)}
+  .gcard .thumb{height:212px;border-radius:16px;position:relative;overflow:hidden;
+    border:1px solid rgba(255,255,255,.07);box-shadow:0 12px 30px rgba(0,0,0,.5);transition:box-shadow .18s}
+  .gcard:hover .thumb{box-shadow:0 18px 44px rgba(0,0,0,.65),0 0 0 1.5px var(--gold)}
+  .gbg{position:absolute;inset:0}
+  .gbg::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.14),transparent 38%)}
+  .gglow{position:absolute;left:50%;top:36%;width:160px;height:160px;transform:translate(-50%,-50%);
+    background:radial-gradient(circle,rgba(255,255,255,.5),transparent 62%);filter:blur(3px)}
+  .gchar{position:absolute;left:0;right:0;top:34%;transform:translateY(-50%);text-align:center;font-size:74px;line-height:1;
+    filter:drop-shadow(0 8px 12px rgba(0,0,0,.55));transition:transform .25s}
+  .gcard:hover .gchar{transform:translateY(-50%) scale(1.1)}
+  .gvig{position:absolute;inset:0;background:radial-gradient(130% 85% at 50% 18%,transparent 42%,rgba(0,0,0,.6) 100%)}
+  .gscrim{position:absolute;left:0;right:0;bottom:0;padding:34px 10px 12px;text-align:center;
+    background:linear-gradient(transparent,rgba(0,0,0,.55) 45%,rgba(0,0,0,.9))}
+  .gscrim .gn{font-family:var(--dp-font-family);font-weight:900;font-size:15px;line-height:1.04;color:#fff;text-shadow:0 2px 6px #000}
+  .gprov{position:absolute;top:9px;left:9px;font-size:7.5px;letter-spacing:.6px;color:rgba(255,255,255,.9);font-weight:800;
+    background:rgba(0,0,0,.4);padding:3px 6px;border-radius:5px}
+  .gbadge{position:absolute;top:9px;right:9px;font-size:9px;font-weight:900;color:#1a1300;
+    background:linear-gradient(180deg,#fff0c0,#ffce4f);padding:3px 7px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.45)}
+  .gwin{margin-top:9px;display:flex;align-items:center;gap:8px;padding:0 2px}
+  .gwin .av{width:20px;height:20px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(255,255,255,.15)}
+  .gwin .u{font-size:10px;color:var(--muted);font-weight:700;line-height:1.1}
+  .gwin .amt{font-size:13.5px;color:var(--green);font-weight:900;font-variant-numeric:tabular-nums;line-height:1.1}
+  .footnote{font-size:11px;color:#5c6478;margin-top:6px}
+
+  /* ---------- promo banner ---------- */
+  .promo{margin:30px 0;border-radius:18px;overflow:hidden;position:relative;min-height:188px;display:flex;align-items:center;
+    background:radial-gradient(150% 180% at 82% 18%,#ffd968 0%,#e9b53a 32%,#b5780f 62%,#6a4408 100%);
+    box-shadow:0 16px 50px rgba(120,80,10,.4),inset 0 0 0 1px rgba(255,240,180,.25)}
+  .promo .burst{position:absolute;right:6%;top:50%;width:380px;height:380px;transform:translateY(-50%);z-index:1;
+    background:radial-gradient(circle,rgba(255,255,255,.55),rgba(255,255,255,.12) 35%,transparent 60%)}
+  .promo .sheen{position:absolute;top:0;bottom:0;width:120px;left:-160px;z-index:3;pointer-events:none;
+    background:linear-gradient(105deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-18deg);
+    animation:sheen 5.5s ease-in-out infinite}
+  @keyframes sheen{0%,55%{left:-160px}80%,100%{left:120%}}
+  .promo .coin{position:absolute;z-index:2;filter:drop-shadow(0 5px 6px rgba(80,50,0,.35));opacity:.95}
+  .promo .pt{position:relative;z-index:4;padding:26px 40px;max-width:62%}
+  .promo .big{font-family:var(--dp-font-family);font-weight:900;font-size:50px;line-height:.9;letter-spacing:-1.5px;
+    color:#fffdf4;text-shadow:0 2px 0 #a8730e,0 4px 14px rgba(60,35,0,.5)}
+  .promo .big em{color:#3a2402;font-style:normal;text-shadow:0 1px 0 rgba(255,240,180,.5)}
+  .promo .sub{font-weight:900;font-size:16px;color:#3a2402;margin-top:8px;letter-spacing:.5px}
+  .promo .cta{margin-top:16px;background:#1b1304;color:#ffce4f;border:1px solid rgba(255,206,79,.4);
+    font-weight:800;padding:12px 28px;border-radius:11px;cursor:pointer;font-size:14px;box-shadow:0 8px 20px rgba(0,0,0,.3)}
+  .promo .cta:hover{background:#241803}
+  .promo .star{font-size:11px;color:#4a3208;margin-top:12px;font-weight:600;max-width:540px;line-height:1.5}
+
+  /* ---------- generic section ---------- */
+  section.blk{padding:34px 0}
+  .h2c{font-size:30px;font-weight:900;letter-spacing:-1px;text-align:center;margin-bottom:6px}
+  .h2c .g{color:var(--gold)}
+  .lead{text-align:center;color:var(--muted);max-width:620px;margin:0 auto 26px}
+
+  /* ---------- loss counter ---------- */
+  .counter{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;text-align:center;max-width:640px;margin:0 auto}
+  .counter .label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:2px;font-weight:800}
+  .counter .num{font-size:42px;font-weight:900;color:var(--red);font-variant-numeric:tabular-nums;margin:6px 0}
+  .counter small{color:var(--muted);font-size:12px}
+
+  /* ---------- SLOT: Gates of Bankruptcy ---------- */
+  .slot{max-width:720px;margin:0 auto;border-radius:18px;overflow:hidden;border:1px solid #3a2f5e;
+    background:linear-gradient(180deg,#241a4a 0%,#3a2a6e 30%,#4a2f7a 60%,#2a1c4e 100%);
+    box-shadow:0 30px 90px rgba(0,0,0,.6)}
+  .slot .stars{position:absolute;inset:0;pointer-events:none;background:
+    radial-gradient(1.5px 1.5px at 20% 22%,rgba(255,255,255,.7),transparent),
+    radial-gradient(1.5px 1.5px at 70% 16%,rgba(255,255,255,.6),transparent),
+    radial-gradient(1.5px 1.5px at 45% 30%,rgba(255,255,255,.5),transparent),
+    radial-gradient(2px 2px at 85% 40%,rgba(255,255,255,.5),transparent)}
+  .slottop{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 0;position:relative;z-index:2}
+  .slottime{font-size:12px;color:#cfc6f0;font-weight:700}
+  .pragmatic{font-size:10px;color:#cfc6f0;font-weight:800;letter-spacing:.5px;text-transform:uppercase;opacity:.8}
+  .slotlogo{text-align:center;position:relative;z-index:2;padding:6px 0 10px}
+  .slotlogo .l1{font-family:var(--dp-font-family);font-weight:900;font-size:30px;letter-spacing:1px;
+    background:linear-gradient(180deg,#fff6c4,#ffce4f 55%,#c8761b);-webkit-background-clip:text;background-clip:text;color:transparent;
+    -webkit-text-stroke:.5px #7a3d12;text-shadow:0 2px 8px rgba(0,0,0,.4);line-height:1}
+  .slotlogo .l2{font-family:var(--dp-font-family);font-weight:900;font-size:30px;line-height:1;letter-spacing:6px;
+    background:linear-gradient(180deg,#fff,#ffce4f 60%,#b5710b);-webkit-background-clip:text;background-clip:text;color:transparent;margin-top:2px}
+  .slotstage{position:relative;z-index:2;display:flex;align-items:stretch;gap:8px;padding:0 12px}
+  .reelframe{flex:1;background:linear-gradient(180deg,#1a0f38,#0e0826);border:3px solid #e0b43a;border-radius:14px;
+    padding:10px;box-shadow:inset 0 0 40px rgba(0,0,0,.6),0 0 0 2px rgba(255,210,90,.15)}
+  .zeus{width:150px;flex-shrink:0;overflow:hidden;display:flex;align-items:flex-end;justify-content:center}
+  .zeus svg{width:100%;filter:drop-shadow(0 6px 12px rgba(0,0,0,.5))}
+  /* image rendered oversized so the figure reads big; the column crops the transparent square padding */
+  .zeus .zeusimg{width:300px;max-width:none;height:auto;object-fit:contain;display:block;
+    filter:drop-shadow(0 8px 16px rgba(0,0,0,.55))}
+  .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+  .cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;position:relative;
+    background:radial-gradient(circle at 50% 30%,#3a2566,#1a1038);border-radius:10px;border:1px solid #4a3580;padding:14%}
+  .cell svg{width:100%;height:100%}
+  .cell.spin{animation:wob .18s ease-in-out infinite}
+  @keyframes wob{50%{transform:translateY(-6px) scale(.88);opacity:.4}}
+  .orb{position:absolute;inset:6%;display:flex;align-items:center;justify-content:center;border-radius:50%;font-weight:900;
+    background:radial-gradient(circle at 38% 30%,#fff3cf,#ffce4f 42%,#9a5a12);color:#3a1d00;font-size:13px;
+    box-shadow:0 0 16px rgba(255,200,80,.8),inset 0 -4px 8px rgba(120,70,10,.4);border:2px solid #fff3cf;z-index:3}
+  .orb.bad{background:radial-gradient(circle at 38% 30%,#ffd0d6,#ff4d5e 42%,#7a0d1c);color:#fff;border-color:#ffd0d6;font-size:11px}
+  .winbanner{position:relative;z-index:2;text-align:center;padding:12px}
+  .winbanner .wlabel{font-family:var(--dp-font-family);font-weight:900;font-size:26px;color:var(--gold);text-shadow:0 2px 6px rgba(0,0,0,.6);letter-spacing:1px}
+  .winbanner .wlabel .amt{color:#fff}
+  .slotbottom{position:relative;z-index:2;background:rgba(8,5,18,.9);display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 18px;flex-wrap:wrap}
+  .credit{font-size:13px;font-weight:800;line-height:1.45}
+  .credit .ck,.credit .bk{color:var(--gold)} .credit .cv,.credit .bv{color:#fff;font-variant-numeric:tabular-nums}
+  .credit small{display:block;color:#7e9b86;font-size:10px;font-weight:600;margin-top:2px}
+  .betctl{display:flex;align-items:center;gap:10px;font-size:12px}
+  .betctl button.bb{width:30px;height:30px;border-radius:50%;border:2px solid #e0b43a;background:#1a0f38;color:var(--gold);font-weight:900;cursor:pointer;font-size:17px}
+  .betctl #betAmt{min-width:48px;text-align:center;color:var(--gold);font-weight:900;font-size:16px}
+  .turbo{font-size:9px;color:#cfc6f0;opacity:.85;font-weight:700;writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.5px;text-align:center}
+  .spinbig{background:radial-gradient(circle at 50% 38%,#fff3cf,#ffce4f 55%,#9a5a12);color:#3a1d00;border:3px solid #fff3cf;
+    width:66px;height:66px;border-radius:50%;font-weight:900;font-size:13px;cursor:pointer;line-height:1.05;box-shadow:0 0 20px rgba(255,200,80,.7)}
+  .spinbig:hover{filter:brightness(1.06)} .spinbig:disabled{opacity:.55;cursor:not-allowed}
+  .slotmsg{position:relative;z-index:2;text-align:center;min-height:22px;padding:10px 16px 14px;font-weight:800;font-size:15px}
+  .winline{color:var(--green)} .lossline{color:var(--red)}
+  .bust{position:relative;z-index:2;text-align:center;margin:0 14px 14px;background:#160b0d;border:1px solid #3a1c20;border-radius:10px;padding:16px;color:#f9b;display:none}
+  .bust .btn2{margin-top:10px;background:var(--gold);color:#1a1300;border:none;font-weight:800;padding:10px 18px;border-radius:9px;cursor:pointer}
+
+  /* ---------- wheel ---------- */
+  .game{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:40px;text-align:center;max-width:560px;margin:0 auto}
+  .wheelwrap{width:240px;height:240px;position:relative;margin:0 auto 24px}
+  .wheel{width:100%;height:100%;border-radius:50%;position:relative;
+    background:conic-gradient(from 0deg,
+      #ff4d5e 0deg 3deg,
+      #1fd87b 3deg 43deg,#16b463 43deg 83deg,#1fd87b 83deg 123deg,#16b463 123deg 163deg,
+      #1fd87b 163deg 203deg,#16b463 203deg 243deg,#1fd87b 243deg 283deg,#16b463 283deg 323deg,
+      #1fd87b 323deg 357deg,
+      #ff4d5e 357deg 360deg);
+    border:8px solid var(--gold);box-shadow:0 0 0 4px #1a2138,0 10px 40px rgba(0,0,0,.5);
+    transition:transform 4.2s cubic-bezier(.13,.72,.12,1)}
+  /* pointer + hub live OUTSIDE the rotating wheel so they stay put */
+  .wpointer{position:absolute;top:-18px;left:50%;transform:translateX(-50%);z-index:6;
+    border-left:13px solid transparent;border-right:13px solid transparent;border-top:26px solid var(--gold);
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}
+  .wheelwrap .hub{position:absolute;top:50%;left:50%;width:34px;height:34px;border-radius:50%;z-index:5;
+    transform:translate(-50%,-50%);background:radial-gradient(circle at 40% 35%,#fff3cf,#e9b53a);border:3px solid #9a5a12}
+  .wheel .lbl{position:absolute;top:50%;left:50%;font-weight:800;font-size:12px;color:#05351c;white-space:nowrap;
+    text-shadow:0 1px 0 rgba(255,255,255,.3);
+    transform:translate(-50%,-50%) rotate(var(--a)) translateY(-84px) rotate(calc(-1 * var(--a)))}
+  .wheel .lbl.lose{color:#fff;font-size:10px;font-weight:900;text-shadow:0 1px 2px #7a0d1c;
+    transform:translate(-50%,-50%) rotate(var(--a)) translateY(-94px) rotate(calc(-1 * var(--a)))}
+  .result{min-height:28px;font-weight:800;font-size:18px;margin-top:6px}
+  .btn{background:var(--gold);color:#1a1300;border:none;font-weight:800;padding:12px 22px;border-radius:10px;cursor:pointer;font-size:15px}
+  .btn:hover{filter:brightness(1.05)}
+
+  /* ---------- tweets / promoters / steps / quotes ---------- */
+  .tweets,.promos,.steps,.quotes{display:grid;gap:16px}
+  .tweets{grid-template-columns:1fr 1fr}
+  .promos,.steps{grid-template-columns:repeat(3,1fr)}
+  .quotes{grid-template-columns:repeat(2,1fr)}
+  .tweet,.promo2,.quote{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px}
+  .tweet .head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .tweet .pic{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--green));display:flex;align-items:center;justify-content:center;font-size:20px}
+  .tweet .name{font-weight:800;font-size:14px}
+  .tweet .name span{color:var(--muted);font-weight:600;display:block;font-size:12px}
+  .tweet .body{font-size:14px;color:#dfe5f2}
+  .tweet .decode{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px;font-size:12.5px;color:var(--red);font-weight:700}
+  .tweet .decode b{color:var(--gold)}
+  .promo2{position:relative;overflow:hidden}
+  .promo2 .av{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--red));display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:14px}
+  .promo2 h3{font-size:18px;margin-bottom:2px} .promo2 .handle{color:var(--purple);font-size:13px;font-weight:700;margin-bottom:12px}
+  .promo2 p{font-size:14px;color:var(--muted)} .promo2 .fine{margin-top:14px;font-size:10px;color:#4f5870;border-top:1px dashed var(--line);padding-top:10px;line-height:1.4}
+  .promo2 .tag{position:absolute;top:14px;right:-30px;background:var(--red);color:#fff;font-size:10px;font-weight:800;padding:4px 36px;transform:rotate(45deg)}
+  .step{background:var(--panel2);border-radius:16px;padding:26px;text-align:center}
+  .step .n{font-size:34px;font-weight:900;color:var(--gold)} .step h4{margin:8px 0 6px;font-size:17px} .step p{font-size:13px;color:var(--muted)}
+  .quote{font-size:15px} .quote .stars2{color:#f5b942;letter-spacing:2px} .quote .who{margin-top:12px;color:var(--muted);font-size:13px;font-weight:700}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--line);padding:36px 0;margin-top:30px;font-size:13px;color:var(--muted)}
+  .disc{background:#160b0d;border:1px solid #3a1c20;border-radius:12px;padding:20px;font-size:12px;color:#caa;line-height:1.6;margin-bottom:24px}
+  .disc b{color:var(--red)}
+
+  @media(max-width:900px){
+    .sidebar{display:none}
+    .hero .inner{max-width:100%}
+    .tweets,.promos,.steps,.quotes{grid-template-columns:1fr}
+    .hero h1{font-size:28px}
+    .promo .big{font-size:30px}
+    .search{display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<div class="topbar">
+  <a href="#" onclick="return false"><img class="brandimg" src="logo.png" alt="MetaLose"></a>
+  <label class="search">🔍 <input id="searchBox" placeholder="Search any game you'll lose at…" autocomplete="off"></label>
+  <div class="balchip"><span>CREDIT</span> <b id="balance">$1,000.00</b></div>
+  <button class="signin" onclick="signIn()">Sign In</button>
+  <button class="iconbtn" title="Support (we won't reply)" onclick="alert('Support ticket #84,201 created. Estimated reply: 7–∞ business days.\n\n(Parody — nothing was sent.)')">💬</button>
+</div>
+
+<div class="app">
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="tabs">
+      <a class="on">Casino</a><a href="#decoded">Prizes</a><a onclick="alert('Sports betting: lose money on things you cannot even spin. (Parody.)')">Sports</a>
+    </div>
+    <a class="navitem" href="#slot"><span class="ic">🔥</span> New Releases <span class="new">RIGGED</span></a>
+    <a class="navitem" href="#slot"><span class="ic">⚡</span> MetaLose Originals</a>
+    <a class="navitem" href="#slot"><span class="ic">🎰</span> Slots</a>
+    <a class="navitem" href="#wheel"><span class="ic">🎥</span> Live Losses</a>
+    <a class="navitem" href="#decoded"><span class="ic">📺</span> Game Shows</a>
+    <a class="navitem" href="#promoters"><span class="ic">⭐</span> Exclusives</a>
+    <a class="navitem" href="#how"><span class="ic">💸</span> Bonus Buy</a>
+    <a class="navitem" href="#slot"><span class="ic">🎣</span> Fishing (your wallet)</a>
+    <a class="navitem" href="#slot"><span class="ic">📉</span> Crash (literally)</a>
+    <a class="navitem" href="#wheel"><span class="ic">🃏</span> Blackjack</a>
+    <a class="navitem" href="#wheel"><span class="ic">🎴</span> Baccarat</a>
+    <a class="navitem" href="#wheel"><span class="ic">🟢</span> Roulette</a>
+    <div class="navsec">More</div>
+    <a class="navitem" href="#how"><span class="ic">⭐</span> VIP Transfer (of your funds)</a>
+    <a class="navitem" href="#decoded"><span class="ic">🔗</span> EARN (nothing)</a>
+    <a class="navitem" href="#footer"><span class="ic">🚪</span> Exit (recommended)</a>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="content">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="roulette" id="heroGem"></div>
+      <div class="inner">
+        <h1>The World's Most <span class="g">Honest</span><br>Crypto Casino &amp; Wealth<br>Removal Platform</h1>
+        <p>So transparent, we'll tell you upfront: the house wins. Every time. That's the whole product.</p>
+        <button class="signin" onclick="signIn()">Deposit Everything →</button>
+      </div>
+    </div>
+
+    <!-- BIG WINS -->
+    <div class="rowhead">
+      <h2>Big Wins™</h2>
+      <div class="toggle"><span class="live"><span class="dot"></span>Live</span><span class="pill">24h</span></div>
+    </div>
+    <div class="carousel" id="bigwins"></div>
+    <div class="footnote">* "Big Wins" shown are the top 0.0001%. Not pictured: the 9,999,999 Big Losses that funded them. <a href="#counter" style="color:var(--red)">See the real number ↓</a></div>
+
+    <!-- PROMO BANNER -->
+    <div class="promo">
+      <div class="burst"></div>
+      <div class="sheen"></div>
+      <div class="coin" style="font-size:34px;right:9%;top:14%">💸</div>
+      <div class="coin" style="font-size:26px;right:24%;top:60%">🪙</div>
+      <div class="coin" style="font-size:30px;right:4%;top:62%">💰</div>
+      <div class="coin" style="font-size:22px;right:31%;top:20%">🪙</div>
+      <div class="pt">
+        <div class="big">30% <em>EXTRA FREE</em></div>
+        <div class="sub">ON EVERY DEPOSIT IN PRIZE FUNDS!</div>
+        <button class="cta" onclick="signIn()">Claim Bonus →</button>
+        <div class="star">*"Prize Funds" are non-withdrawable, non-real, and non-yours. They can only be re-lost. The "free" 30% is the most expensive 30% you'll ever pay for.</div>
+      </div>
+    </div>
+
+    <!-- LOSS COUNTER -->
+    <section class="blk" id="counter">
+      <div class="counter">
+        <div class="label">💀 Community Money Vaporized Since You Loaded This Page</div>
+        <div class="num" id="lossCounter">$0</div>
+        <small>Updates in real time. Unlike your withdrawal request.</small>
+      </div>
+    </section>
+
+    <!-- SLOT -->
+    <section class="blk" id="slot">
+      <div class="h2c">⚡ <span class="g">Gates of Bankruptcy</span> ⚡</div>
+      <p class="lead">A loving tribute to a certain Olympian slot. Tumbling reels, divine multipliers, and one guarantee Zeus himself swears by: <b>the number only goes down.</b></p>
+      <div class="slot">
+        <div class="stars"></div>
+        <div class="slottop"><div class="slottime">11:13 · 🔋 1%</div><div class="pragmatic">Pragmatic Pain™</div></div>
+        <div class="slotlogo"><div class="l1">GATES OF BANKRUPTCY</div><div class="l2">0000</div></div>
+        <div class="slotstage">
+          <div class="reelframe"><div class="grid" id="grid"></div></div>
+          <div class="zeus" id="zeus"></div>
+        </div>
+        <div class="winbanner"><div class="wlabel">WIN <span class="amt" id="winAmt">$0.00</span></div></div>
+        <div class="slotbottom">
+          <div class="credit">
+            <div><span class="ck">CREDIT</span> <span class="cv" id="credit">$1,000.00</span></div>
+            <div><span class="bk">BET</span> <span class="bv" id="betLine">$10.00</span></div>
+            <small>*"Prize Funds" — non-withdrawable, non-real, non-yours</small>
+          </div>
+          <div class="betctl">
+            <button class="bb" onclick="changeBet(-1)">−</button>
+            <span id="betAmt">$10</span>
+            <button class="bb" onclick="changeBet(1)">+</button>
+            <span class="turbo">HOLD FOR<br>FASTER LOSSES</span>
+            <button class="spinbig" id="slotSpin" onclick="slotSpin()">SPIN ⟳</button>
+          </div>
+        </div>
+        <div class="slotmsg" id="slotMsg">Every spin is a small donation to a man with a private jet.</div>
+        <div class="bust" id="bust">
+          💀 <b>YOU'RE BUST.</b> Credit: $0.00. But hey — you still "qualify for the airdrop"! 🎉<br>
+          <button class="btn2" onclick="topUp()">Deposit More (the obvious play) →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHEEL -->
+    <section class="blk" id="wheel">
+      <div class="h2c">The <span class="g">"Wheel of Fortune"</span></div>
+      <p class="lead"><b style="color:var(--green)">99% WIN CHANCE!*</b> Look at all that green — almost impossible to lose. (*The 1% sliver has, statistically, a 100% attendance record on your spins.)</p>
+      <div class="game">
+        <div class="wheelwrap">
+          <div class="wheel" id="wheelEl">
+            <div class="lbl lose" style="--a:0deg">💀 1% LOSE</div>
+            <div class="lbl" style="--a:40deg">WIN 🤑</div>
+            <div class="lbl" style="--a:80deg">FREE $$</div>
+            <div class="lbl" style="--a:120deg">WIN 💎</div>
+            <div class="lbl" style="--a:160deg">WIN 🚀</div>
+            <div class="lbl" style="--a:200deg">JACKPOT</div>
+            <div class="lbl" style="--a:240deg">WIN BIG</div>
+            <div class="lbl" style="--a:280deg">WIN $$$</div>
+            <div class="lbl" style="--a:320deg">WIN 🎉</div>
+          </div>
+          <div class="wpointer"></div>
+          <div class="hub"></div>
+        </div>
+        <button class="btn" id="spinBtn" onclick="spinWheel()">SPIN ($50 per spin, non-refundable)</button>
+        <div class="result" id="result"></div>
+      </div>
+    </section>
+
+    <!-- DECODED PROMOS -->
+    <section class="blk" id="decoded">
+      <div class="h2c">Promoter Posts, <span class="g">Translated to English</span></div>
+      <p class="lead">We ran real-world crypto-casino promo copy through our patented Honesty Filter™. Here's what came out.</p>
+      <div class="tweets">
+        <div class="tweet">
+          <div class="head"><div class="pic">🤑</div><div class="name">GainsGuru ✔<span>@1spinandwithdraw</span></div></div>
+          <div class="body">"They're giving away $100,000 today to those who deposit! Every deposit instantly earns Free 'Prize Funds.' Just deposit over $33 or it won't let you enter. After you deposit you can literally do 1 spin and withdraw 😤"</div>
+          <div class="decode">🔍 DECODED: "Give us at least <b>$33</b> of real money to enter a draw for fake money you won't win. '1 spin and withdraw' is a dare — they're betting you won't stop. <b>Nobody stops at one.</b>"</div>
+        </div>
+        <div class="tweet">
+          <div class="head"><div class="pic">🚀</div><div class="name">AirdropAndy ✔<span>@freemoneyfr</span></div></div>
+          <div class="body">"They're airdropping us $4M in USDT on July 15th. Every single person who deposits gets a piece. Your WORST case scenario is you just earn an airdrop. Capitalize while this lasts 🫡"</div>
+          <div class="decode">🔍 DECODED: "Split '$4M' among <b>everyone on Earth who deposits</b> = your slice is a rounding error. 'Worst case' skips the part where the house edge eats your deposit before July 15th. <b>The airdrop is bait. Your deposit is the meal.</b>"</div>
+        </div>
+        <div class="tweet">
+          <div class="head"><div class="pic">📈</div><div class="name">LamboLogan ✔<span>@2to14k</span></div></div>
+          <div class="body">"The obvious play is deposit and do a couple spins like this guy 👇 Best case you turn $2 into $14k AND earn an airdrop. Crazy some of you aren't taking advantage…"</div>
+          <div class="decode">🔍 DECODED: "'This guy' is one cherry-picked clip out of <b>50,000 who lost.</b> Survivorship bias in a hoodie. <b>You are the content, not the winner.</b>"</div>
+        </div>
+        <div class="tweet">
+          <div class="head"><div class="pic">🧠</div><div class="name">Actually Math ✔<span>@thehousealwayswins</span></div></div>
+          <div class="body">"Reminder: if a stranger online needs YOU to deposit first for THEM to get paid, you're not the customer. You're the product. The only guaranteed airdrop is from your wallet to theirs. 💸"</div>
+          <div class="decode">🔍 DECODED: This one didn't need decoding. It's just true.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROMOTERS -->
+    <section class="blk" id="promoters">
+      <div class="h2c">Meet Our <span class="g">Totally Independent</span> Promoters</div>
+      <p class="lead">These influencers genuinely love us and are in no way paid hundreds of thousands to say so. The contract just makes them <em>extra</em> sincere.</p>
+      <div class="promos">
+        <div class="promo2"><div class="tag">#SPON</div><div class="av">🧢</div><h3>Chad "EZ Money" Maxwell</h3><div class="handle">@notfinancialadvice</div><p>"Bro I turned $100 into a Cybertruck. This isn't gambling, it's a <b>lifestyle</b>. Use code BROKE!"</p><div class="fine">Chad gambles a sponsor-funded balance. Never made a personal deposit. Cybertruck is a rental. Owes the IRS.</div></div>
+        <div class="promo2"><div class="tag">#SPON</div><div class="av">💅</div><h3>Tiffany Vibes</h3><div class="handle">@manifesting_jackpots</div><p>"The universe WANTS you to deposit, bestie. I won so much I filmed it 14 times for the angles 💖"</p><div class="fine">Wins re-shot until favorable. Losses edited out (4h 22m of footage). "Universe" is a paid partnership.</div></div>
+        <div class="promo2"><div class="tag">#SPON</div><div class="av">🎙️</div><h3>The Grindset Podcast</h3><div class="handle">@riseandgrindcoin</div><p>"Successful people don't save. They <b>deposit</b>. Ep 412: Why your emergency fund is a limiting belief."</p><div class="fine">Host "one trade away from generational wealth" since 2021. Studio is his mom's garage.</div></div>
+      </div>
+    </section>
+
+    <!-- HOW -->
+    <section class="blk" id="how">
+      <div class="h2c">How It <span class="g">Works</span></div>
+      <p class="lead">A simple 3-step journey from "I'll just try it once" to "please don't tell my wife."</p>
+      <div class="steps">
+        <div class="step"><div class="n">1</div><h4>Deposit</h4><p>Instant! Your money arrives in 0.4s. (Withdrawals take 7–∞ business days.)</p></div>
+        <div class="step"><div class="n">2</div><h4>Win Once</h4><p>We let you win early to fire the dopamine cannon. This is "marketing." You'll chase it forever.</p></div>
+        <div class="step"><div class="n">3</div><h4>Become a Promoter</h4><p>Down bad? Recruit your friends for a cut! Now your losses are a business.</p></div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="blk">
+      <div class="h2c">Real Reviews From <span class="g">Real* People</span></div>
+      <p class="lead">*People is a flexible term.</p>
+      <div class="quotes">
+        <div class="quote"><div class="stars2">★★★★★</div>"I came for the free spin and stayed because I can no longer afford to leave my house."<div class="who">— Greg, formerly homeowner</div></div>
+        <div class="quote"><div class="stars2">★★★★★</div>"Support replied in 6 weeks to say my withdrawal was 'pending vibes.' Very polite."<div class="who">— Anonymous (legally advised)</div></div>
+        <div class="quote"><div class="stars2">★★★★★</div>"My favorite part is the part where I almost won. I almost win SO often."<div class="who">— Dave, professional almost-winner</div></div>
+        <div class="quote"><div class="stars2">★★★★★</div>"They named a loyalty tier after me. It's called 'The Whale.' I think it's a compliment?"<div class="who">— A whale, beaching</div></div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="footer">
+      <div class="disc">
+        <b>⚠️ THIS IS A PARODY.</b> MetaLose is a fictional satire of crypto-casino "sweepstakes" sites and the influencers paid to promote them. Nothing here is real, no money is accepted, no wallet connects, and there is no actual gambling. All names, "games," and promos are invented for comedic critique. The joke <i>is</i> the point: these sites are built so the house wins and promoters get paid whether you win or lose.<br><br>
+        <b>If gambling is affecting you or someone you know:</b> US — National Problem Gambling Helpline <b>1-800-522-4700</b> (24/7, confidential). UK — GamCare <b>0808 8020 133</b>. You're not "one spin away." You're allowed to walk away.
+      </div>
+      <img class="brandimg" src="logo.png" alt="MetaLose" style="height:22px;margin-bottom:10px;opacity:.85">
+      © 2026 MetaLose Holdings (Cayman, obviously). Not a real company. Licensed by nobody. Audited by vibes.
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // ===== royalty-free inline SVG gem assets (original vector art) =====
+  function gem(L,M,D){
+    return '<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">'
+      +'<g stroke="rgba(255,255,255,.35)" stroke-width="1" stroke-linejoin="round">'
+      +'<polygon points="20,15 44,15 56,32 32,61 8,32" fill="'+M+'"/>'
+      +'<polygon points="20,15 44,15 48,32 16,32" fill="'+L+'"/>'
+      +'<polygon points="8,32 20,15 16,32" fill="'+D+'"/>'
+      +'<polygon points="56,32 44,15 48,32" fill="'+D+'"/>'
+      +'<polygon points="16,32 48,32 32,61" fill="'+M+'"/>'
+      +'<polygon points="8,32 16,32 32,61" fill="'+D+'"/>'
+      +'<polygon points="48,32 56,32 32,61" fill="'+D+'"/>'
+      +'<polyline points="24,15 28,32 32,61" fill="none" stroke="rgba(255,255,255,.18)"/>'
+      +'<polyline points="40,15 36,32 32,61" fill="none" stroke="rgba(255,255,255,.18)"/>'
+      +'</g></svg>';
+  }
+  function crown(){
+    return '<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">'
+      +'<g stroke="#7a4d09" stroke-width="1.4" stroke-linejoin="round">'
+      +'<path d="M8 46 L12 20 L24 34 L32 16 L40 34 L52 20 L56 46 Z" fill="#ffce4f"/>'
+      +'<rect x="8" y="46" width="48" height="8" rx="2" fill="#e0a82e"/>'
+      +'<circle cx="12" cy="20" r="3.5" fill="#fff3cf"/><circle cx="32" cy="16" r="3.5" fill="#fff3cf"/><circle cx="52" cy="20" r="3.5" fill="#fff3cf"/>'
+      +'<circle cx="24" cy="49.5" r="2.4" fill="#ff4d6a"/><circle cx="40" cy="49.5" r="2.4" fill="#2f9bff"/></g></svg>';
+  }
+  function ring(){
+    return '<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">'
+      +'<circle cx="32" cy="40" r="16" fill="none" stroke="#ffce4f" stroke-width="6"/>'
+      +'<circle cx="32" cy="40" r="16" fill="none" stroke="#e0a82e" stroke-width="2"/>'
+      +'<polygon points="32,6 40,18 32,28 24,18" fill="#7fe9ff" stroke="rgba(255,255,255,.5)" stroke-width="1"/>'
+      +'<polygon points="32,6 40,18 32,28" fill="#3fbfe6"/></svg>';
+  }
+  function chalice(){
+    return '<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">'
+      +'<g stroke="#7a4d09" stroke-width="1.2" stroke-linejoin="round">'
+      +'<path d="M16 12 H48 L42 34 Q32 42 22 34 Z" fill="#ffce4f"/>'
+      +'<path d="M16 12 H48 L46 18 H18 Z" fill="#b30d2a"/>'
+      +'<rect x="30" y="38" width="4" height="12" fill="#e0a82e"/>'
+      +'<rect x="20" y="50" width="24" height="6" rx="2" fill="#ffce4f"/></g></svg>';
+  }
+  const GEMS = [
+    gem('#bfe3ff','#3f9bff','#0b4aa6'), // sapphire
+    gem('#c7ffd9','#34d17e','#0a7a3f'), // emerald
+    gem('#ffc9d2','#ff4d6a','#a60d2a'), // ruby
+    gem('#e9d2ff','#9b5cff','#5a1da6'), // amethyst
+    gem('#ffe9b0','#ffb347','#b5710b'), // topaz
+    crown(), ring(), chalice()
+  ];
+
+  // big sad Zeus (original SVG)
+  // original full-body Zeus (vector art — NOT the copyrighted game render)
+  function zeusFace(mood){
+    var brow = mood==='sad'
+      ? 'M58 78 Q64 73 70 77 M82 77 Q88 73 94 78'           // worried
+      : (mood==='happy'
+        ? 'M58 76 Q64 79 70 78 M82 78 Q88 79 94 76'          // relaxed
+        : 'M58 76 L71 79 M81 79 L94 76');                     // stern (neutral)
+    var eyes = mood==='happy'
+      ? '<path d="M62 84 Q66 81 70 84" stroke="#5a4a2a" stroke-width="2" fill="none"/><path d="M82 84 Q86 81 90 84" stroke="#5a4a2a" stroke-width="2" fill="none"/>'
+      : '<circle cx="66" cy="85" r="2.4" fill="#3a2e1a"/><circle cx="86" cy="85" r="2.4" fill="#3a2e1a"/>';
+    var mouth = mood==='happy' ? 'M68 100 Q76 106 84 100' : (mood==='sad' ? 'M68 103 Q76 99 84 103' : 'M70 102 H82');
+    var glow = mood==='happy' ? '5' : '3';
+    return '<svg viewBox="0 0 160 360" xmlns="http://www.w3.org/2000/svg">'
+      +'<defs>'
+        +'<linearGradient id="zrobe" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c4cfe2"/></linearGradient>'
+        +'<linearGradient id="zskin" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f0c9a0"/><stop offset="1" stop-color="#d09c6e"/></linearGradient>'
+        +'<linearGradient id="zsash" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a93ff"/><stop offset="1" stop-color="#1d4fb0"/></linearGradient>'
+        +'<linearGradient id="zgold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0c0"/><stop offset=".5" stop-color="#ffce4f"/><stop offset="1" stop-color="#b5710b"/></linearGradient>'
+        +'<linearGradient id="zhair" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#cdd6e6"/></linearGradient>'
+        +'<linearGradient id="zbolt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#bfe3ff"/><stop offset="1" stop-color="#2f8bff"/></linearGradient>'
+        +'<filter id="zglow" x="-60%" y="-30%" width="220%" height="160%"><feGaussianBlur stdDeviation="'+glow+'" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'
+      +'</defs>'
+      // ---- robe / toga ----
+      +'<path d="M48 150 Q40 250 38 340 Q60 350 80 348 Q100 350 122 340 Q118 250 112 150 Q80 138 48 150 Z" fill="url(#zrobe)"/>'
+      +'<path d="M70 152 Q66 250 64 344" stroke="#aeb9cd" stroke-width="2" fill="none" opacity=".7"/>'
+      +'<path d="M92 152 Q96 250 100 344" stroke="#aeb9cd" stroke-width="2" fill="none" opacity=".7"/>'
+      +'<path d="M80 150 L78 346" stroke="#bcc6d8" stroke-width="2" fill="none" opacity=".5"/>'
+      // ---- bare chest / shoulders (skin) ----
+      +'<path d="M54 120 Q80 108 106 120 L110 156 Q80 146 50 156 Z" fill="url(#zskin)"/>'
+      // ---- right (image-left) bare arm ----
+      +'<path d="M50 124 Q30 140 34 180 Q38 200 52 196 Q46 168 60 150 Z" fill="url(#zskin)"/>'
+      +'<rect x="34" y="170" width="22" height="12" rx="6" fill="url(#zgold)"/>'   // wrist cuff
+      +'<rect x="44" y="128" width="20" height="9" rx="4.5" fill="url(#zgold)"/>'  // bicep band
+      // ---- blue sash diagonal ----
+      +'<path d="M58 116 L96 150 Q84 210 96 250 L78 250 Q70 200 50 150 Z" fill="url(#zsash)" opacity=".95"/>'
+      +'<path d="M58 116 L70 124" stroke="#ffce4f" stroke-width="3" fill="none"/>'
+      // ---- neck ----
+      +'<rect x="70" y="106" width="20" height="18" rx="6" fill="url(#zskin)"/>'
+      // ---- hair behind ----
+      +'<path d="M50 86 Q40 36 80 30 Q120 36 110 86 Q116 110 104 122 L56 122 Q44 110 50 86 Z" fill="url(#zhair)"/>'
+      // ---- head ----
+      +'<ellipse cx="80" cy="80" rx="25" ry="27" fill="url(#zskin)"/>'
+      // ---- gold laurel band ----
+      +'<path d="M56 64 Q80 54 104 64" stroke="url(#zgold)" stroke-width="5" fill="none" stroke-linecap="round"/>'
+      +'<path d="M54 62 l-7 -5 8 -1 Z" fill="url(#zgold)"/><path d="M106 62 l7 -5 -8 -1 Z" fill="url(#zgold)"/>'
+      // ---- face ----
+      +'<path d="'+brow+'" stroke="#cfd6e2" stroke-width="4" fill="none" stroke-linecap="round"/>'
+      + eyes
+      +'<path d="M76 86 Q73 94 78 96" stroke="#b98e63" stroke-width="2" fill="none"/>'  // nose
+      +'<path d="'+mouth+'" stroke="#8a6a44" stroke-width="2.5" fill="none" stroke-linecap="round"/>'
+      // ---- big white beard + moustache ----
+      +'<path d="M56 92 Q56 150 74 178 Q80 186 86 178 Q104 150 104 92 Q96 116 80 116 Q64 116 56 92 Z" fill="url(#zhair)"/>'
+      +'<path d="M64 96 Q72 104 80 102 Q88 104 96 96" stroke="#c4cfe2" stroke-width="3" fill="none"/>'
+      +'<path d="M70 130 Q80 138 90 130 M68 150 Q80 160 92 150" stroke="#aeb9cd" stroke-width="2" fill="none" opacity=".7"/>'
+      // ---- sandals ----
+      +'<path d="M52 344 q-6 6 2 9 h16 v-9 Z" fill="#9a6b3a"/><path d="M92 344 q-6 6 2 9 h16 v-9 Z" fill="#9a6b3a"/>'
+      // ---- lightning bolt (glowing) ----
+      +'<g filter="url(#zglow)">'
+        +'<polygon points="118,40 86,130 104,126 74,250 96,150 78,154 110,52" fill="url(#zbolt)"/>'
+        +'<polygon points="112,52 92,118 104,116 84,210" fill="#ffffff" opacity=".85"/>'
+      +'</g>'
+      +'</svg>';
+  }
+
+  // ===== shared balance =====
+  let balance = 1000.00, losses = 1487203;
+  const balEl = document.getElementById('balance');
+  function money(n){return '$' + Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+  function renderBalance(){
+    balEl.textContent = money(balance);
+    balEl.classList.toggle('low', balance < 100);
+    const cr=document.getElementById('credit'); if(cr) cr.textContent = money(balance);
+    document.getElementById('bust').style.display = balance <= 0 ? 'block' : 'none';
+    document.getElementById('slotSpin').disabled = balance <= 0;
+  }
+  function signIn(){ alert("Welcome! 🥳 To 'Sign In' we just need everything you own.\n\n(Parody — no account, no wallet, no real anything.)"); }
+  function topUp(){ balance += 1000; renderBalance(); document.getElementById('slotMsg').textContent="Fresh $1,000 deposited. The house thanks you for your service."; }
+
+  // ===== loss counter =====
+  const lc = document.getElementById('lossCounter');
+  function fmt(n){return '$' + Math.floor(n).toLocaleString('en-US');}
+  setInterval(()=>{ losses += Math.floor(Math.random()*900)+50; lc.textContent = fmt(losses); }, 130);
+
+  // ===== Big Wins carousel =====
+  // [name, darkColor, brightColor, character, badge, user, amount, avatarGradient]
+  const WINS = [
+    ['Wanted Dead or a Wallet','#2a1408','#d4761e','🤠','x500','BAYC99',534885,'#d4761e,#7a3a08'],
+    ['Bigger Bass Bankruptcy','#062b45','#22a6e0','🎣','MEGAWAYS','degen_dan',52524,'#22a6e0,#0a4a6e'],
+    ['Chests of Cope','#3a0a14','#d6324c','💰','BONUS','rugpull_rick',38094,'#d6324c,#6a0d1c'],
+    ['2 Wild 2 Broke','#2a2206','#c4a32a','🐎','x100','gmgm_gary',31950,'#c4a32a,#5a4708'],
+    ['Dragon Liquidation','#2e1003','#e8741a','🐉','x1000','ser_loss',30240,'#e8741a,#7a3a06'],
+    ['Sugar Crash 1000','#36082a','#e848aa','🍬','x1000','apein_amy',29890,'#e848aa,#6a0d4a'],
+    ['5 Lions MegaLoss','#2a1f04','#d4aa28','🦁','MEGAWAYS','wagmi_wade',26445,'#d4aa28,#5a4508'],
+    ['Starlight Poverty 1000','#140f44','#8466ff','🌟','x1000','hodl_holly',26015,'#8466ff,#2a1a7a'],
+    ['Gates of Bankruptcy','#1e1442','#9b5cff','⚡','x0.00','zeus_simp',25281,'#9b5cff,#3a2a6e'],
+    ['Big Bass XmasBroke','#053226','#1fc488','🎅','MEGAWAYS','Hamhamgod',21528,'#1fc488,#06392b']
+  ];
+  const bw = document.getElementById('bigwins');
+  WINS.forEach(w=>{
+    const card=document.createElement('div'); card.className='gcard';
+    card.innerHTML =
+      '<div class="thumb">'
+      +'<div class="gbg" style="background:radial-gradient(125% 95% at 50% 22%,'+w[2]+','+w[1]+' 78%)"></div>'
+      +'<div class="gglow"></div>'
+      +'<div class="gchar">'+w[3]+'</div>'
+      +'<div class="gvig"></div>'
+      +'<div class="gprov">PRAGMATIC PAIN™</div>'
+      +'<div class="gbadge">'+w[4]+'</div>'
+      +'<div class="gscrim"><div class="gn">'+w[0]+'</div></div>'
+      +'</div>'
+      +'<div class="gwin"><div class="av" style="background:linear-gradient(135deg,'+w[7]+')"></div>'
+      +'<div><div class="u">'+w[5]+'</div><div class="amt">'+money(w[6])+'</div></div></div>';
+    card.onclick=()=>{ document.getElementById('slot').scrollIntoView(); };
+    bw.appendChild(card);
+  });
+  // hero decorative gem
+  document.getElementById('heroGem').innerHTML='<div style="width:150px;height:150px;opacity:.85">'+GEMS[3]+'</div>';
+
+  // ===== Gates of Bankruptcy slot =====
+  const ORBS = [{t:'1000x',bad:false},{t:'500x',bad:false},{t:'100x',bad:false},{t:'2x',bad:false},
+                {t:'0.0x',bad:true},{t:'RENT',bad:true},{t:'COPE',bad:true},{t:'−∞',bad:true}];
+  const grid = document.getElementById('grid');
+  const zeus = document.getElementById('zeus');
+  // If you drop your own image at metalose/zeus.png it'll be used; otherwise the original SVG Zeus shows.
+  let zeusImgOk = false;
+  function renderZeus(mood){
+    if(zeusImgOk){
+      const f = mood==='sad' ? 'grayscale(.4) brightness(.8)' : (mood==='happy' ? 'saturate(1.3) brightness(1.08)' : 'none');
+      zeus.innerHTML = '<img class="zeusimg" src="zeus.png" style="filter:'+f+'" alt="Zeus">';
+    } else {
+      zeus.innerHTML = zeusFace(mood);
+    }
+  }
+  (function(){ const probe=new Image(); probe.onload=()=>{ zeusImgOk=true; renderZeus('neutral'); }; probe.onerror=()=>{ zeusImgOk=false; }; probe.src='zeus.png?'+Date.now(); })();
+  renderZeus('neutral');
+  let cells = [];
+  for(let i=0;i<30;i++){ const c=document.createElement('div'); c.className='cell'; grid.appendChild(c); cells.push(c); }
+  function rgem(){ return GEMS[Math.floor(Math.random()*GEMS.length)]; }
+  function paintReels(showOrbs){
+    cells.forEach(c=>{ c.innerHTML = rgem(); });
+    if(showOrbs){
+      const n = 2 + Math.floor(Math.random()*3);
+      for(let i=0;i<n;i++){
+        const cell = cells[Math.floor(Math.random()*cells.length)];
+        if(cell.querySelector('.orb')) continue;
+        const o = ORBS[Math.floor(Math.random()*ORBS.length)];
+        const orb=document.createElement('div'); orb.className='orb'+(o.bad?' bad':''); orb.textContent=o.t;
+        cell.appendChild(orb);
+      }
+    }
+  }
+  paintReels(false);
+
+  const betSteps=[0.18,1,5,10,25,50,100];
+  let bet = 10;
+  function syncBet(){ document.getElementById('betAmt').textContent='$'+bet; document.getElementById('betLine').textContent=money(bet); }
+  function changeBet(d){ let i=betSteps.indexOf(bet); if(i<0)i=3; i=Math.max(0,Math.min(betSteps.length-1,i+d)); bet=betSteps[i]; syncBet(); }
+  syncBet();
+
+  let slotBusy=false;
+  function slotSpin(){
+    if(slotBusy) return;
+    if(balance<=0){ renderBalance(); return; }
+    if(balance<bet){ document.getElementById('slotMsg').innerHTML='<span class="lossline">Not enough credit for that bet. Lower it… or "deposit more" 👀</span>'; return; }
+    slotBusy=true;
+    const btn=document.getElementById('slotSpin'); btn.disabled=true;
+    const msg=document.getElementById('slotMsg'), winAmt=document.getElementById('winAmt');
+    balance -= bet; renderBalance(); winAmt.textContent='$0.00';
+    cells.forEach(c=>c.classList.add('spin'));
+    let ticks=0;
+    const anim=setInterval(()=>{
+      paintReels(false); ticks++;
+      if(ticks>10){
+        clearInterval(anim);
+        cells.forEach(c=>c.classList.remove('spin'));
+        paintReels(true);
+        const roll=Math.random(); let payout=0, line='';
+        if(roll<0.55){ payout=0; renderZeus('sad'); line='<span class="lossline">Zeus giveth nothing. −'+money(bet).slice(1)+' ⚡</span>'; }
+        else if(roll<0.9){ payout=+(bet*(0.1+Math.random()*0.4)).toFixed(2); renderZeus('neutral'); line='<span class="winline">✨ "BIG WIN" '+money(payout)+'!</span> <span class="lossline">(you bet '+money(bet)+'. net −'+money(bet-payout)+')</span>'; }
+        else { payout=+(bet*(0.5+Math.random()*0.45)).toFixed(2); renderZeus('happy'); line='<span class="winline">🔥 1000x HIT!!* '+money(payout)+'!!</span> <span class="lossline">*on a $0.18 side bet. still down '+money(bet-payout)+'.</span>'; }
+        winAmt.textContent=money(payout); balance+=payout; renderBalance(); losses+=(bet-payout); msg.innerHTML=line;
+        slotBusy=false; btn.disabled=balance<=0;
+        if(balance<=0){ msg.innerHTML='<span class="lossline">And… it is gone. ⚰️ But the CREDIT number sure looked big while it lasted, hm?</span>'; renderZeus('sad'); renderBalance(); }
+      }
+    },85);
+  }
+
+  // ===== rigged wheel: 99% "WIN", lands on the 1% LOSE sliver every time =====
+  let spinning=false, wheelTurns=0;
+  const wheelOutcomes = [
+    "WOW! Against 99% odds… you found the 1%. 💀",
+    "Statistically impossible! And yet — you Lose. 🎉",
+    "The 1% sliver? On YOUR spin? What are the odds. (1 in 1.) 🫠",
+    "So much green. You landed on the only red. Again. 😎",
+    "Beating the 99% (in the wrong direction) since today.",
+    "Incredible — you've now hit the '1%' 100% of the time. 📉"
+  ];
+  function spinWheel(){
+    if(spinning) return; spinning=true;
+    document.getElementById('result').textContent='';
+    const btn=document.getElementById('spinBtn'); btn.textContent='Spinning your savings...';
+    wheelTurns += 6;
+    const jitter=(Math.random()*4-2);
+    const rot = wheelTurns*360 + jitter; // whole turns -> lands the top red sliver under the fixed pointer, labels stay upright
+    document.getElementById('wheelEl').style.transform='rotate('+rot+'deg)';
+    setTimeout(()=>{
+      const o = wheelOutcomes[Math.floor(Math.random()*wheelOutcomes.length)];
+      const res=document.getElementById('result'); res.style.color='var(--red)'; res.textContent=o;
+      btn.textContent='Spin Again (chasing it now, huh?)';
+      losses += 50; if(balance>=50){ balance-=50; renderBalance(); }
+      spinning=false;
+    },4300);
+  }
+
+  // init
+  renderBalance();
+</script>
+</body>
+</html>
